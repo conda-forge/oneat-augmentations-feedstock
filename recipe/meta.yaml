@@ -11,8 +11,12 @@ source:
 
 build:
   noarch: python
-  script: {{ PYTHON }} -m pip install . -vv
-  number: 1
+  script: 
+    # fixed in 1.0.6 which was never released to pypi
+    # https://github.com/Kapoorlabs-CAPED/caped-ai-augmentations/commit/ca6f5aa628fa592e17c103536d47d0c4070e9e0c
+    - sed -i.bak 's/"sklearn"/"scikit-learn"/' setup.py
+    - {{ PYTHON }} -m pip install . -vv
+  number: 2
 
 requirements:
   host:
@@ -34,7 +38,7 @@ test:
     - oneat_augmentations
   commands:
     - pip list
-    # - pip check  # Fails due to sklearn and opencv-python-headless
+    - pip check
   requires:
     - pip
     - python {{ python_min }}
